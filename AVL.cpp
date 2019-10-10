@@ -3,8 +3,7 @@ using namespace std;
 
 struct node{
   int info;
-  node *left;
-  node *right;
+  node *left,*right;
   int height;
 };
 
@@ -67,20 +66,86 @@ node *insertNode(node *root,int info){
   root->height=1+max(height(root->right),height(root->left));
   int balance=balanceFactor(root);
   if(balance>1 && info<root->left->info){
+  	cout<<root->info<<" ";
     return rightRotate(root);
   }
   else if(balance<-1 && info>root->right->info){
+  	cout<<root->info<<" ";
     return leftRotate(root);
   }
   else if(balance>1 && info>root->left->info){
+  	cout<<root->info<<" ";
     root->left=leftRotate(root->left);
     return rightRotate(root);
   }
   else if(balance<-1 && info<root->right->info){
+  	cout<<root->info<<" ";
     root->right=rightRotate(root->right);
     return leftRotate(root);
   }
   return root;
+}
+
+node* inOrderSuccessor(node* root) {
+    node* current = root;
+    while(current->left != NULL) {
+        current = current->left;
+    }
+    return current;
+}
+
+node *deleteNode(node *root,int info){
+	node *temp;
+	if(root==NULL){
+		return 0;
+	}
+	if(info<root->info){
+		root->left=deleteNode(root->left,info);
+	}
+	else if(info>root->info){
+		root->right=deleteNode(root->right,info);
+	}
+	else{
+		if(root->left==NULL || root->right==NULL){
+			temp=root;
+			if(root->left==NULL){
+				root=root->right;
+			}
+			else if(root->right==NULL){
+				root=root->left;
+			}
+			delete(temp);
+		}
+		else{
+			node *temp=inOrderSuccessor(root->right);
+			root->info=temp->info;
+			root->right=deleteNode(root->right,temp->info);
+		}
+	}
+	if(root==NULL){
+		return root;
+	}
+	root->height=1+max(height(root->left),height(root->right));
+	int balance=balanceFactor(root);
+	if(balance > 1 && balanceFactor(root->left)  < 0) {
+        cout<<root->info<<'\n';
+        root->left = leftRotate(root->left);
+        return rightRotate(root);
+    }
+    else if(balance > 1 && balanceFactor(root->left) >= 0) {
+        cout<<root->info<<'\n';
+        return rightRotate(root);
+    }
+    else if(balance < -1 && balanceFactor(root->right) > 0) {
+        cout<<root->info<<'\n';
+        root->right = rightRotate(root->right);
+        return leftRotate(root);
+    }
+    else if(balance < -1 && balanceFactor(root->right) <= 0) {
+        cout<<root->info<<'\n';
+        return leftRotate(root);
+    }
+    return root;
 }
 
 void inOrder(node *n){
@@ -115,9 +180,9 @@ int main(){
         if (c == 'i'){
             root = insertNode(root,a);
         }
-//        else if (c == 'd'){
-//            root = deleteNode(root,a);
-//        }
+        else if (c == 'd'){
+            root = deleteNode(root,a);
+        }
     }
   preOrder(root);
   cout<<endl;
