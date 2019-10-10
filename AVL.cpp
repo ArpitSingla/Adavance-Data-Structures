@@ -128,21 +128,21 @@ node *deleteNode(node *root,int info){
 	root->height=1+max(height(root->left),height(root->right));
 	int balance=balanceFactor(root);
 	if(balance > 1 && balanceFactor(root->left)  < 0) {
-        cout<<root->info<<'\n';
+        cout<<root->info<<endl;
         root->left = leftRotate(root->left);
         return rightRotate(root);
     }
     else if(balance > 1 && balanceFactor(root->left) >= 0) {
-        cout<<root->info<<'\n';
+        cout<<root->info<<endl;
         return rightRotate(root);
     }
     else if(balance < -1 && balanceFactor(root->right) > 0) {
-        cout<<root->info<<'\n';
+        cout<<root->info<<endl;
         root->right = rightRotate(root->right);
         return leftRotate(root);
     }
     else if(balance < -1 && balanceFactor(root->right) <= 0) {
-        cout<<root->info<<'\n';
+        cout<<root->info<<endl;
         return leftRotate(root);
     }
     return root;
