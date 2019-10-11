@@ -1,27 +1,32 @@
 #include<iostream>
+#define ll long long
 using namespace std;
 
 struct node{
-  int info;
+  ll info;
   node *left,*right;
-  int height;
+  ll height;
 };
 
-int height(node *n){
+ll height(node *n){
   if(n==NULL){
     return 0;
   }
-  return n->height;
+  else{
+   ll ldepth=height(n->left);
+  ll rdepth=height(n->right);
+  return max(ldepth,rdepth)+1;
+  }
 }
 
-int balanceFactor(node *n){
+ll balanceFactor(node *n){
   if(n==NULL){
     return 0;
   }
   return height(n->left)-height(n->right);
 }
 
-node *newNode(int info){
+node *newNode(ll info){
 	node *temp=new node();
   	temp->info=info;
   	temp->left=NULL;
@@ -50,7 +55,7 @@ node *rightRotate(node *root){
   return temp;
 }
 
-node *insertNode(node *root,int info){
+node *insertNode(node *root,ll info){
   if(root==NULL){
   	return newNode(info);
   }
@@ -64,22 +69,22 @@ node *insertNode(node *root,int info){
     return root;
   }
   root->height=1+max(height(root->right),height(root->left));
-  int balance=balanceFactor(root);
+  ll balance=balanceFactor(root);
   if(balance>1 && info<root->left->info){
-  	cout<<root->info<<" ";
+  	cout<<root->info<<endl;
     return rightRotate(root);
   }
   else if(balance<-1 && info>root->right->info){
-  	cout<<root->info<<" ";
+  	cout<<root->info<<endl;
     return leftRotate(root);
   }
   else if(balance>1 && info>root->left->info){
-  	cout<<root->info<<" ";
+  	cout<<root->info<<endl;
     root->left=leftRotate(root->left);
     return rightRotate(root);
   }
   else if(balance<-1 && info<root->right->info){
-  	cout<<root->info<<" ";
+  	cout<<root->info<<endl;
     root->right=rightRotate(root->right);
     return leftRotate(root);
   }
@@ -94,7 +99,7 @@ node* inOrderSuccessor(node* root) {
     return current;
 }
 
-node *deleteNode(node *root,int info){
+node *deleteNode(node *root,ll info){
 	node *temp;
 	if(root==NULL){
 		return 0;
@@ -126,23 +131,23 @@ node *deleteNode(node *root,int info){
 		return root;
 	}
 	root->height=1+max(height(root->left),height(root->right));
-	int balance=balanceFactor(root);
+	ll balance=balanceFactor(root);
 	if(balance > 1 && balanceFactor(root->left)  < 0) {
-        cout<<root->info<<endl;
+        cout<<root->info<<'\n';
         root->left = leftRotate(root->left);
         return rightRotate(root);
     }
     else if(balance > 1 && balanceFactor(root->left) >= 0) {
-        cout<<root->info<<endl;
+        cout<<root->info<<'\n';
         return rightRotate(root);
     }
     else if(balance < -1 && balanceFactor(root->right) > 0) {
-        cout<<root->info<<endl;
+        cout<<root->info<<'\n';
         root->right = rightRotate(root->right);
         return leftRotate(root);
     }
     else if(balance < -1 && balanceFactor(root->right) <= 0) {
-        cout<<root->info<<endl;
+        cout<<root->info<<'\n';
         return leftRotate(root);
     }
     return root;
@@ -170,12 +175,12 @@ void postOrder(node *n){
 	}
 }
 int main(){
-	int n;
+	long long n;
     cin>>n;
     node* root = NULL;
     while(n--){
         char c;
-        int a;
+        long long a;
         cin>>c>>a;
         if (c == 'i'){
             root = insertNode(root,a);
